@@ -1,10 +1,22 @@
 <?php
+
+require_once __DIR__ . '/vendor/autoload.php';
 require('controller/controller.php');
+
+/**
+ * Installation de composer: https://getcomposer.org/download/
+ * Doc TWIG: https://twig.symfony.com/doc/2.x/templates.html
+ */
+
+$loader = new Twig_Loader_Filesystem(__DIR__ . '/view');
+$twig = new Twig_Environment($loader, array('debug' => true));
+$twig->addExtension(new Twig_Extension_Debug());
+
 
 try { // On essaie de faire des choses
     if (isset($_GET['action'])) {
         if ($_GET['action'] == 'listPosts') {
-            listPosts();
+            listPosts($twig);
         }
         elseif ($_GET['action'] == 'post') {
             if (isset($_GET['id']) && $_GET['id'] > 0) {
