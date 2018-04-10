@@ -1,0 +1,18 @@
+{% extends "template.html.twig" %}
+
+{% block title %}
+    <title>Accueil</title>
+{% endblock %}
+
+{% block content %}
+
+    {% include "nav.html.twig" %}
+
+    {% for post in posts %}
+        <div class="posts">
+            <h2>{{ post.title }}</h2>
+            <p>{{ post.dateCreated }}</p>
+        </div>
+    {% endfor %}
+
+{% endblock %}

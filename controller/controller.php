@@ -1,13 +1,25 @@
 <?php
+//namespace Blog\Controller;
+
+
 require_once('dao/PostDAO.php');
 require_once('dao/CommentDAO.php');
 
-function listPosts()
+/*use Blog\DAO\CommentDAO;
+use Blog\DAO\PostDAO;*/
+
+
+/**
+ * @param $twig Twig_Environment
+ */
+function listPosts($twig)
 {
     $postDAO = new PostDAO();
     $posts = $postDAO->getPosts();
 
-    require('view/accueil.php');
+    echo $twig->render('list-posts.html.twig', array('posts' => $posts));
+
+    //require('view/accueil.php');
 }
 
 function post()
@@ -17,7 +29,9 @@ function post()
 
     $post = $postDAO->getPost($_GET['id']);
     $comment = $commentDAO->getComments($_GET['id']);
+    $posts = $postDAO->getPosts();
 
+    //echo $twig->render('chapitre.html.twig', array('posts' => $posts, 'post' => $post, 'comments' => $comment));
     require('view/chapitre.php');
 }
 

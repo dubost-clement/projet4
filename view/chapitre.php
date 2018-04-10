@@ -10,7 +10,7 @@
 </head>
 <body>
 
-    <?php include('templates/nav.php'); ?>
+    <?php include('nav.php'); ?>
 
     <div class="post">
         <h2> <?php echo htmlspecialchars($post->getTitle()); ?> </h2>
@@ -52,6 +52,6 @@
     </div>
 
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.js'></script> 
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.js'></script>
 </body>
 </html>
