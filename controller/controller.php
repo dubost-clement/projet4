@@ -63,4 +63,36 @@ function addComment($postId, $author, $comment)
 }
 
 
+function admin()
+{
+    require('view/admin.php');
+}
 
+function newPost()
+{
+    require('view/addpost.php');
+}
+
+function updateList()
+{
+    $postDAO = new PostDAO();
+    $posts = $postDAO->getPosts();
+
+    require('view/listPosts.php');
+}
+
+function postUpdate()
+{
+    $postDAO = new PostDAO();
+    $post = $postDAO->getPost($_GET['id']);
+
+    require('view/updatePost.php');
+}
+
+function updateConfirmation($titlePost, $contentPost, $postId)
+{
+    $postDAO = new PostDAO();
+    $post = $postDAO->updatePost($titlePost, $contentPost, $postId);
+
+    header('Location: index.php?action=post&id=' . $postId);
+}

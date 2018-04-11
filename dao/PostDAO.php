@@ -31,8 +31,12 @@ class PostDAO extends BaseDAO
         return $post;
     }
 
-    public function updatePost(){
+    public function updatePost($titlePost, $contentPost, $postId){
+        $db = $this->dbConnect();
+        $req = $db->prepare('UPDATE posts SET title = ?, content= ? WHERE id = ?');
+        $post = $req->execute(array($titlePost, $contentPost, $postId));
 
+        return $post;
     }
 
     public function deletePost(){
