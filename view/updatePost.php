@@ -27,6 +27,9 @@
                 <input type="submit" value="modifier"/>
             </div>
         </form>
+        <form action="index.php?action=delete&amp;id=<?php echo $post->getId(); ?>" method="post" class="delete">
+            <input type="submit" value="supprimer"/>
+        </form>
     </div>
     
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>

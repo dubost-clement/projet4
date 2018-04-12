@@ -39,8 +39,12 @@ class PostDAO extends BaseDAO
         return $post;
     }
 
-    public function deletePost(){
-        
+    public function deletePost($postId){
+      $db = $this->dbConnect();
+      $req = $db->prepare('DELETE FROM posts WHERE id =?');  
+      $post = $req->execute(array($postId));
+
+      return $post;
     }
 }
 

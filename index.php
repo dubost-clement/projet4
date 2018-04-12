@@ -76,6 +76,11 @@ try { // On essaie de faire des choses
                 }
             }
         }
+        elseif ($_GET['action'] == 'delete'){
+            if (isset($_GET['id']) && $_GET['id'] > 0) {
+                deletePost($_GET['id']);
+            }
+        }
     }
 
     else {
