@@ -2,143 +2,137 @@
 require_once('dao/PostDAO.php');
 require_once('dao/CommentDAO.php');
 require_once('dao/UserDAO.php');
-
 class BackendController
 {
     private $postDAO;
     private $commentDAO;
     private $userDAO;
-
     public function __construct()
     {
         $this->postDAO = new PostDAO;
         $this->commentDAO = new CommentDAO;
         $this->userDAO = new UserDAO;
+        $this->router = new Router();
     }
-
-    public function connexion($pseudo, $password)
+    public function connexion($reqData)
     {
+        $pseudo = $reqData["pseudo"] ?? "";
+        $password = $reqData["password"] ?? "";
         $user = $this->userDAO->connect($pseudo);
         $posts = $this->postDAO->getPosts();
-        if (password_verify($password, $user->getPassword())){
+        $router = $this->router;
+        if (password_verify($password, $user->getPassword())) {
             $cookieValue = 'connexion';
-            setcookie("session", $cookieValue, time()+1200);
-            header('Location: index.php?action=connexionForm');
-        }
-        else{
+            setcookie("session", $cookieValue, time() + 1200);
+            header('Location: ' . $this->router->getBaseURL() . '/connexion');
+        } else {
             require('view/connexion.php');
         }
     }
-
     public function disconnect()
     {
         $cookieValue = 'connexion';
-        setcookie("session", $cookieValue, time()-1200);
-        header('Location: index.php');
+        setcookie("session", $cookieValue, time() - 1200);
+        header('Location: ' . $this->router->getBaseURL() . '/');
     }
-
     public function newPost()
     {
-        if (isset($_COOKIE["session"])){
+        $router = $this->router;
+        if (isset($_COOKIE["session"])) {
             $posts = $this->postDAO->getPosts();
             require('view/addPost.php');
-        }
-        else{
+        } else {
             require('view/connexion.php');
         }
     }
-
-    public function addPost($titlePost, $contentPost)
+    public function addPost($reqData)
     {
-        if (isset($_COOKIE["session"])){
+        $titlePost = $reqData["titlePost"];
+        $contentPost = $reqData["contentPost"];
+        $router = $this->router;
+        if (isset($_COOKIE["session"])) {
             $post = $this->postDAO->createPost($titlePost, $contentPost);
-            if ($post === false){
+            if ($post === false) {
                 throw new Exception('Impossible de créer l\'article !');
+            } else {
+                header('Location: ' . $this->router->getBaseURL() . '/');
             }
-            else{
-                header('Location: index.php');
-            }
-        }
-        else{
+        } else {
             require('view/connexion.php');
         }
     }
-
     public function updateList()
     {
-        if (isset($_COOKIE["session"])){
+        $router = $this->router;
+        if (isset($_COOKIE["session"])) {
             $posts = $this->postDAO->getPosts();
             require('view/listPosts.php');
-        }
-        else{
+        } else {
             require('view/connexion.php');
         }
     }
-
-    public function postUpdate()
+    public function postUpdate($postId)
     {
-        if (isset($_COOKIE["session"])){
-            $post = $this->postDAO->getPost($_GET['id']);
+        var_dump($postId);
+        $router = $this->router;
+        if (isset($_COOKIE["session"])) {
+            $post = $this->postDAO->getPost($postId);
             $posts = $this->postDAO->getPosts();
             require('view/updatePost.php');
-        }
-        else{
+        } else {
             require('view/connexion.php');
         }
     }
-
-    public function updateConfirmation($titlePost, $contentPost, $postId)
+    public function updateConfirmation($postId, $reqData)
     {
-        if (isset($_COOKIE["session"])){
+        $titlePost = $reqData["titlePost"];
+        $contentPost = $reqData["contentPost"];
+        $router = $this->router;
+        if (isset($_COOKIE["session"])) {
             $post = $this->postDAO->updatePost($titlePost, $contentPost, $postId);
-            header('Location: index.php?action=post&id=' . $postId);
-        }
-        else{
+            header('Location: ' . $this->router->getBaseURL() . '/posts/' . $postId);
+        } else {
             require('view/connexion.php');
         }
     }
-
     public function deletePost($postId)
     {
-        if (isset($_COOKIE["session"])){
+        $router = $this->router;
+        if (isset($_COOKIE["session"])) {
             $post = $this->postDAO->deletePost($postId);
-            header('Location: index.php');
-        }
-        else{
+            header('Location: ' . $this->router->getBaseURL() . '/');
+        } else {
             require('view/connexion.php');
         }
     }
-
     public function reportedList()
     {
-        if (isset($_COOKIE["session"])){
+        $router = $this->router;
+        if (isset($_COOKIE["session"])) {
             $comment = $this->commentDAO->commentList();
             $posts = $this->postDAO->getPosts();
             require('view/commentaires.php');
-        }
-        else{
+        } else {
             require('view/connexion.php');
         }
     }
-
     public function deleteComments($commentId)
     {
-        if (isset($_COOKIE["session"])){
+        $router = $this->router;
+        if (isset($_COOKIE["session"])) {
             $comment = $this->commentDAO->deleteComment($commentId);
-            header('Location: index.php?action=reportedCommentList');
-        }
-        else{
+            header('Location: ' . $this->router->getBaseURL() . '/comments/reported');
+        } else {
             require('view/connexion.php');
         }
     }
-
     public function acceptComments($commentId)
     {
-        if (isset($_COOKIE["session"])){
+        $router = $this->router;
+        if (isset($_COOKIE["session"])) {
             $comment = $this->commentDAO->acceptComment($commentId);
-            header('location: index.php?action=reportedCommentList');
-        }
-        else{
+            header('Location: ' . $this->router->getBaseURL() . '/comments/reported');
+        } else {
             require('view/connexion.php');
         }
     }
